@@ -1,23 +1,63 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vanilla App Template</title>
-    <link rel="stylesheet" href="./css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/2.0.0/modern-normalize.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <title>Image Search</title>
   </head>
   <body>
-    <load src="./partials/header.html" icon-path="img/sprite.svg#logo" />
+    <header class="header">
+      <div class="container">
+        <form class="form">
+          <label class="form-label">
+            <input
+              class="form-input"
+              type="text"
+              name="search-text"
+              placeholder="Search images..."
+              required
+              autocomplete="off"
+            />
+          </label>
+          <button class="form-btn" type="submit">Search</button>
+        </form>
+      </div>
+    </header>
 
     <main>
-      <!-- Loads the specified .html file -->
-      <load src="./partials/vite-promo.html" />
-      <load src="./partials/badges.html" />
+      <div class="container">
+        <!-- Loader -->
+        <div class="loader-container">
+          <div class="loader"></div>
+        </div>
+
+        <!-- Gallery -->
+        <ul class="gallery"></ul>
+
+        <!-- Load More Button -->
+        <div class="load-more-container">
+          <button class="load-more-btn" type="button">Load more</button>
+        </div>
+      </div>
     </main>
 
-    <load src="./partials/footer.html" />
+    <footer class="footer">
+      <div class="container">
+        <p class="footer-text">© 2024 Image Search App</p>
+      </div>
+    </footer>
 
-    <script type="module" src="./main.js"></script>
+    <!-- Используем относительный путь -->
+    <script type="module" src="./src/main.js"></script>
   </body>
 </html>
