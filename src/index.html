@@ -3,32 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/2.0.0/modern-normalize.min.css"
-    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <title>Image Search</title>
+    <title>Image Search App</title>
   </head>
   <body>
     <header class="header">
       <div class="container">
         <form class="form">
-          <label class="form-label">
-            <input
-              class="form-input"
-              type="text"
-              name="search-text"
-              placeholder="Search images..."
-              required
-              autocomplete="off"
-            />
-          </label>
+          <input
+            class="form-input"
+            type="text"
+            name="search-text"
+            placeholder="Search images..."
+            required
+            autocomplete="off"
+          />
           <button class="form-btn" type="submit">Search</button>
         </form>
       </div>
@@ -36,28 +30,15 @@
 
     <main>
       <div class="container">
-        <!-- Loader -->
         <div class="loader-container">
           <div class="loader"></div>
+          <p class="loader-text">Loading images, please wait...</p>
         </div>
 
-        <!-- Gallery -->
         <ul class="gallery"></ul>
-
-        <!-- Load More Button -->
-        <div class="load-more-container">
-          <button class="load-more-btn" type="button">Load more</button>
-        </div>
       </div>
     </main>
 
-    <footer class="footer">
-      <div class="container">
-        <p class="footer-text">© 2024 Image Search App</p>
-      </div>
-    </footer>
-
-    <!-- Используем относительный путь -->
-    <script type="module" src="./src/main.js"></script>
+    <script type="module" src="./main.js"></script>
   </body>
 </html>

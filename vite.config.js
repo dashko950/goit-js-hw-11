@@ -9,6 +9,7 @@ export default defineConfig(({ command }) => {
     define: {
       [command === 'serve' ? 'global' : '_global']: {},
     },
+    base: '/goit-js-hw-11/', // ← ДОБАВЬТЕ ЭТУ СТРОКУ для GitHub Pages
     root: 'src',
     build: {
       sourcemap: true,

@@ -1,11 +1,16 @@
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-const galleryContainer = document.querySelector('.gallery');
-let lightbox;
-
 export function createGallery(images) {
-  const markup = images
+  const gallery = document.querySelector('.gallery');
+
+  if (!images || !images.hits || images.hits.length === 0) {
+    gallery.innerHTML =
+      '<p class="no-results">No images found. Try another search.</p>';
+    return;
+  }
+
+  const markup = images.hits
     .map(image => {
       return `
         <li class="gallery-item">
@@ -42,37 +47,40 @@ export function createGallery(images) {
     })
     .join('');
 
-  galleryContainer.insertAdjacentHTML('beforeend', markup);
+  gallery.innerHTML = markup;
 
-  // Инициализируем или обновляем lightbox
-  if (!lightbox) {
-    lightbox = new SimpleLightbox('.gallery a', {
+  // Инициализируем SimpleLightbox
+  if (!window.lightbox) {
+    window.lightbox = new SimpleLightbox('.gallery a', {
       captionsData: 'alt',
       captionDelay: 250,
     });
   } else {
-    lightbox.refresh();
+    window.lightbox.refresh();
   }
 }
 
 export function clearGallery() {
-  galleryContainer.innerHTML = '';
-  if (lightbox) {
-    lightbox.destroy();
-    lightbox = null;
+  const gallery = document.querySelector('.gallery');
+  if (gallery) {
+    gallery.innerHTML = '';
+  }
+  if (window.lightbox) {
+    window.lightbox.destroy();
+    window.lightbox = null;
   }
 }
 
 export function showLoader() {
-  const loaderContainer = document.querySelector('.loader-container');
-  if (loaderContainer) {
-    loaderContainer.style.display = 'flex';
+  const loader = document.querySelector('.loader-container');
+  if (loader) {
+    loader.style.display = 'flex';
   }
 }
 
 export function hideLoader() {
-  const loaderContainer = document.querySelector('.loader-container');
-  if (loaderContainer) {
-    loaderContainer.style.display = 'none';
+  const loader = document.querySelector('.loader-container');
+  if (loader) {
+    loader.style.display = 'none';
   }
 }

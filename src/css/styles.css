@@ -1,3 +1,4 @@
+/* src/css/styles.css */
 /**
   |============================
   | include css partials with
@@ -16,102 +17,145 @@
 @import url('./badges.css');
 @import url('./back-link.css');
 @import url('./footer.css');
-* {
-  box-sizing: border-box;
+
+/* Custom styles for image search app */
+:root {
+  --primary-color: #4e75ff;
+  --primary-hover: #6c8cff;
+  --border-color: #808080;
+  --border-hover: #000000;
+  --border-focus: #4e75ff;
+  --error-bg: #ef4040;
+  --text-color: #2e2f42;
+  --white: #ffffff;
+  --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Body - для центрирования всего контента */
 body {
-  font-family: 'Montserrat', sans-serif;
-  line-height: 1.5;
-  color: #2e2f42;
-  background-color: #f6f6f6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   margin: 0;
-  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-color);
+  background-color: var(--white);
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 15px;
-}
-
+/* Header - центрируем форму по центру экрана */
 .header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 20px 0;
-  position: fixed;
-  width: 100%;
-  top: 0;
-  z-index: 1000;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Форма поиска - ТОЧНО ПО МАКЕТУ */
 .form {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 10px;
-  max-width: 600px;
-  margin: 0 auto;
 }
 
+/* Поле ввода - ТОЧНО ПО МАКЕТУ */
 .form-input {
-  width: 300px;
-  padding: 14px 20px;
-  border: none;
-  border-radius: 8px;
+  width: 272px;
+  height: 40px;
+  padding: 8px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-family: 'Montserrat', sans-serif;
   font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: var(--text-color);
+  background-color: var(--white);
   outline: none;
-  transition: all 0.3s ease;
+  transition: border-color var(--transition);
+  opacity: 1;
+}
+
+.form-input::placeholder {
+  color: #808080;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+}
+
+.form-input:hover {
+  border-color: var(--border-hover);
 }
 
 .form-input:focus {
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+  border-color: var(--border-focus);
 }
 
+/* Кнопка Search - ТОЧНО ПО МАКЕТУ */
 .form-btn {
-  padding: 14px 30px;
-  background-color: #4caf50;
-  color: white;
+  width: 91px;
+  height: 40px;
+  padding: 8px 16px;
   border: none;
   border-radius: 8px;
+  background-color: var(--primary-color);
+  font-family: 'Montserrat', sans-serif;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: var(--white);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color var(--transition);
+  opacity: 1;
 }
 
-.form-btn:hover {
-  background-color: #45a049;
-  transform: translateY(-2px);
+.form-btn:hover,
+.form-btn:focus {
+  background-color: var(--primary-hover);
 }
 
-.form-btn:active {
-  transform: translateY(0);
+.form-btn:disabled {
+  background-color: #cfcfcf;
+  cursor: not-allowed;
 }
-
-main {
-  padding-top: 120px;
-  min-height: calc(100vh - 200px);
-}
-
 .loader-container {
   display: none;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100px;
+  padding: 40px;
+  margin: 20px 0;
 }
 
 .loader {
   width: 48px;
   height: 48px;
-  border: 5px solid #667eea;
-  border-bottom-color: transparent;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--primary-color);
   border-radius: 50%;
-  display: inline-block;
-  box-sizing: border-box;
-  animation: rotation 1s linear infinite;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
 }
 
-@keyframes rotation {
+.loader-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: var(--text-color);
+  margin: 0;
+  text-align: center;
+}
+
+@keyframes spin {
   0% {
     transform: rotate(0deg);
   }
@@ -120,121 +164,212 @@ main {
   }
 }
 
-.gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-  list-style: none;
-  padding: 0;
-  margin: 0 0 40px;
+/* Main content */
+main {
+  display: none;
+  flex: 1;
+  padding: 20px 0;
 }
 
-.gallery-item {
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
-.gallery-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-.gallery-link {
-  text-decoration: none;
-  color: inherit;
+main.has-results {
   display: block;
 }
 
-.gallery-card {
-  background: white;
+/* Loader */
+.loader-container {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Галерея - ТОЧНО ПО МАКЕТУ 3x3 */
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  list-style: none;
+  padding: 0;
+  margin: 32px 0;
+  justify-content: center;
+}
+
+.gallery-item {
+  flex: 0 0 360px;
+  border: 1px solid #808080;
+  border-radius: 4px;
+  overflow: hidden;
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition);
+  opacity: 1;
+}
+
+.gallery-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.gallery-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
 }
 
 .gallery-image {
   width: 100%;
-  height: 250px;
+  height: 200px;
   object-fit: cover;
   display: block;
 }
 
 .image-info {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  padding: 15px;
-  background: white;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 4px 20px;
+  background-color: var(--white);
 }
 
 .info-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  gap: 2px;
 }
 
 .info-label {
   font-size: 12px;
-  font-weight: 500;
-  color: #666;
-  text-transform: uppercase;
+  font-weight: 600;
+  line-height: 1.33;
+  letter-spacing: 0.04em;
+  color: var(--text-color);
 }
 
 .info-value {
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 2;
+  letter-spacing: 0.04em;
+  color: var(--text-color);
 }
 
-.load-more-container {
-  display: none;
+/* Сообщение "нет результатов" */
+.no-results {
   text-align: center;
-  margin: 40px 0;
-}
-
-.load-more-btn {
-  padding: 15px 40px;
-  background-color: #667eea;
-  color: white;
-  border: none;
-  border-radius: 8px;
   font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: var(--text-color);
+  padding: 40px;
+  margin: 20px 0;
+  width: 100%;
 }
 
-.load-more-btn:hover {
-  background-color: #5a6fd8;
-  transform: translateY(-2px);
+/* Основное содержимое */
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 32px;
 }
 
-.load-more-btn:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
-  transform: none;
+/* Кастомные стили для iziToast чтобы соответствовать макету ошибки */
+.iziToast {
+  font-family: 'Montserrat', sans-serif !important;
+  border-radius: 4px !important;
 }
 
-.footer {
-  background-color: #2e2f42;
-  color: white;
-  padding: 20px 0;
-  text-align: center;
-  margin-top: 40px;
+.iziToast.iziToast-color-red {
+  background: var(--error-bg) !important;
+  width: 432px !important;
+  min-height: 88px !important;
+  padding: 16px !important;
 }
 
-.footer-text {
-  margin: 0;
-  font-size: 14px;
+.iziToast.iziToast-color-red .iziToast-body {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+.iziToast.iziToast-color-red .iziToast-title,
+.iziToast.iziToast-color-red .iziToast-message {
+  color: var(--white) !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+  letter-spacing: 0.04em !important;
+}
+
+.iziToast.iziToast-color-red .iziToast-title {
+  font-weight: 600 !important;
+  margin-bottom: 4px !important;
+}
+
+.iziToast.iziToast-color-red .iziToast-close {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M2.66683 2.66669L13.3335 13.3334M2.66683 13.3334L13.3335 2.66669' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E")
+    no-repeat center !important;
+  background-size: 16px 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  opacity: 1 !important;
+  top: 16px !important;
+  right: 16px !important;
+}
+
+.iziToast.iziToast-color-red .iziToast-close:hover {
+  opacity: 0.8 !important;
+}
+
+.iziToast.iziToast-color-yellow {
+  background: #ffc107 !important;
+  border-radius: 4px !important;
 }
 
 /* Адаптивность */
-@media (max-width: 768px) {
+@media screen and (max-width: 1200px) {
+  .gallery-item {
+    flex: 0 0 calc(50% - 12px);
+    max-width: calc(50% - 12px);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .gallery {
+    gap: 16px;
+  }
+
+  .gallery-item {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
   .form {
     flex-direction: column;
-    align-items: center;
+    gap: 16px;
   }
 
   .form-input {
@@ -247,21 +382,26 @@ main {
     max-width: 400px;
   }
 
-  .gallery {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  .iziToast {
+    max-width: 90% !important;
+    width: auto !important;
   }
 
-  main {
-    padding-top: 160px;
+  .iziToast.iziToast-color-red {
+    width: 90% !important;
+    max-width: 400px !important;
   }
 }
 
-@media (max-width: 480px) {
-  .gallery {
-    grid-template-columns: 1fr;
+@media screen and (max-width: 480px) {
+  .header {
+    min-height: 80vh;
+    padding: 16px;
   }
 
   .image-info {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 8px;
   }
 }
