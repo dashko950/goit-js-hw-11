@@ -31,8 +31,11 @@ export function createGallery(images) {
 
   // Если нет изображений - показываем сообщение
   if (!Array.isArray(images) || images.length === 0) {
-    gallery.innerHTML =
-      '<p class="no-results">No images found. Try another search.</p>';
+    gallery.innerHTML = `
+      <p class="no-results">
+        Sorry, there are no images matching your search query. Please try again!
+      </p>
+    `;
     return;
   }
 
@@ -172,5 +175,25 @@ export function hideLoadMoreButton() {
   const loadMoreContainer = document.querySelector('.load-more-container');
   if (loadMoreContainer) {
     loadMoreContainer.style.display = 'none';
+  }
+}
+
+// Функция для показа сообщения "нет результатов"
+export function showNoResultsMessage() {
+  const gallery = document.querySelector('.gallery');
+  if (gallery) {
+    gallery.innerHTML = `
+      <p class="no-results">
+        Sorry, there are no images matching your search query. Please try again!
+      </p>
+    `;
+  }
+}
+
+// Функция для показа сообщения об ошибке
+export function showErrorMessage(message) {
+  const gallery = document.querySelector('.gallery');
+  if (gallery) {
+    gallery.innerHTML = `<p class="no-results">${message}</p>`;
   }
 }

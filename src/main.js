@@ -10,6 +10,8 @@ import {
   hideLoadMoreButton,
   appendGallery,
   refreshLightbox,
+  showNoResultsMessage,
+  showErrorMessage,
 } from './js/render-functions.js';
 
 // Элементы DOM
@@ -27,12 +29,7 @@ let loadedHits = 0;
 hideLoadMoreButton();
 
 // Обработчик формы
-form.addEventListener('submit', handleFormSubmit);
-
-// Обработчик кнопки Load more
-loadMoreBtn.addEventListener('click', handleLoadMore);
-
-async function handleFormSubmit(e) {
+form.addEventListener('submit', async e => {
   e.preventDefault();
 
   // Получаем поисковый запрос
@@ -70,6 +67,9 @@ async function handleFormSubmit(e) {
 
     // Проверяем наличие результатов
     if (!data.hits || data.hits.length === 0) {
+      showError(
+        'Sorry, there are no images matching your search query. Please try again!'
+      );
       showNoResultsMessage();
       return;
     }
@@ -92,11 +92,12 @@ async function handleFormSubmit(e) {
 
     // Показываем сообщение об ошибке
     showError('An error occurred while fetching images. Please try again.');
-    console.error('Search error:', error);
+    showErrorMessage('Error loading images. Please try again.');
   }
-}
+});
 
-async function handleLoadMore() {
+// Обработчик кнопки Load more
+loadMoreBtn.addEventListener('click', async () => {
   // Если уже идет загрузка или нет больше изображений - выходим
   if (isLoading || loadedHits >= totalHits) return;
 
@@ -124,7 +125,14 @@ async function handleLoadMore() {
     refreshLightbox();
 
     // Прокручиваем страницу к новым изображениям
-    scrollToNewImages();
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    if (galleryItems.length > 0) {
+      const lastItem = galleryItems[galleryItems.length - 1];
+      lastItem.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
 
     // Проверяем, нужно ли еще показывать кнопку Load more
     if (loadedHits >= totalHits) {
@@ -137,41 +145,14 @@ async function handleLoadMore() {
 
     // Показываем сообщение об ошибке
     showError('Failed to load more images. Please try again.');
-    console.error('Load more error:', error);
   } finally {
     // Всегда скрываем лоадер
     hideLoader();
     isLoading = false;
   }
-}
+});
 
-// Функция для прокрутки к новым изображениям
-function scrollToNewImages() {
-  const galleryItems = document.querySelectorAll('.gallery-item');
-  if (galleryItems.length > 0) {
-    const secondLastItem = galleryItems[galleryItems.length - 2];
-    if (secondLastItem) {
-      secondLastItem.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    }
-  }
-}
-
-// Функция для показа сообщения "нет результатов"
-function showNoResultsMessage() {
-  const gallery = document.querySelector('.gallery');
-  if (gallery) {
-    gallery.innerHTML = `
-      <p class="no-results">
-        Sorry, there are no images matching your search query. Please try again!
-      </p>
-    `;
-  }
-}
-
-// Функции для уведомлений
+// Функции для уведомлений (только iziToast, без работы с DOM)
 function showError(message) {
   iziToast.error({
     title: 'Error',
