@@ -1,135 +1,125 @@
 /* src/css/styles.css */
-/**
-  |============================
-  | include css partials with
-  | default @import url()
-  |============================
-*/
-/* Common styles */
-@import url('./reset.css');
-@import url('./base.css');
-@import url('./container.css');
-@import url('./animations.css');
+/* УДАЛИТЬ ВСЁ ПРЕДЫДУЩЕЕ СОДЕРЖИМОЕ И ЗАМЕНИТЬ НА ЭТО */
 
-/* Sections style */
-@import url('./header.css');
-@import url('./vite-promo.css');
-@import url('./badges.css');
-@import url('./back-link.css');
-@import url('./footer.css');
-
-/* Custom styles for image search app */
-:root {
-  --primary-color: #4e75ff;
-  --primary-hover: #6c8cff;
-  --border-color: #808080;
-  --border-hover: #000000;
-  --border-focus: #4e75ff;
-  --error-bg: #ef4040;
-  --text-color: #2e2f42;
-  --white: #ffffff;
-  --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+/* Reset и базовые стили */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-/* Body - для центрирования всего контента */
 body {
+  font-family: 'Montserrat', sans-serif;
+  line-height: 1.5;
+  color: #2e2f42;
+  background-color: #fff;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  margin: 0;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 400;
-  line-height: 1.5;
-  color: var(--text-color);
-  background-color: var(--white);
 }
 
-/* Header - центрируем форму по центру экрана */
+/* Контейнер */
+.container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+}
+
+/* Header */
 .header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  min-height: 100vh;
-
+  background-color: #fff;
   padding: 20px 0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  display: flex;
+  align-items: center;
+  min-height: 200px;
 }
 
-/* Форма поиска - ТОЧНО ПО МАКЕТУ */
+.header .container {
+  display: flex;
+  justify-content: center;
+}
+
+/* Форма поиска */
 .form {
   display: flex;
-  justify-content: center;
+  gap: 8px;
   align-items: center;
-  gap: 10px;
 }
 
-/* Поле ввода - ТОЧНО ПО МАКЕТУ */
 .form-input {
   width: 272px;
   height: 40px;
   padding: 8px 16px;
-  border: 1px solid var(--border-color);
+  border: 1px solid #808080;
   border-radius: 4px;
   font-family: 'Montserrat', sans-serif;
   font-size: 16px;
   line-height: 1.5;
   letter-spacing: 0.04em;
-  color: var(--text-color);
-  background-color: var(--white);
+  color: #2e2f42;
   outline: none;
-  transition: border-color var(--transition);
-  opacity: 1;
+  transition: border-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .form-input::placeholder {
   color: #808080;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 16px;
-  line-height: 1.5;
-  letter-spacing: 0.04em;
 }
 
 .form-input:hover {
-  border-color: var(--border-hover);
+  border-color: #000000;
 }
 
 .form-input:focus {
-  border-color: var(--border-focus);
+  border-color: #4e75ff;
 }
 
-/* Кнопка Search - ТОЧНО ПО МАКЕТУ */
 .form-btn {
   width: 91px;
-  height: 60px;
+  height: 40px;
   padding: 8px 16px;
+  background-color: #4e75ff;
   border: none;
   border-radius: 8px;
-  background-color: var(--primary-color);
   font-family: 'Montserrat', sans-serif;
   font-size: 16px;
   font-weight: 500;
   line-height: 1.5;
   letter-spacing: 0.04em;
-  color: var(--white);
+  color: #fff;
   cursor: pointer;
-  transition: background-color var(--transition);
-  opacity: 1;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.form-btn:hover,
-.form-btn:focus {
-  background-color: var(--primary-hover);
+.form-btn:hover {
+  background-color: #6c8cff;
 }
 
 .form-btn:disabled {
   background-color: #cfcfcf;
   cursor: not-allowed;
 }
+
+/* Main content - ВСЕГДА ВИДИМЫЙ */
+main {
+  flex: 1;
+  padding: 20px 0;
+  display: block !important; /* ОЧЕНЬ ВАЖНО: принудительно делаем видимым */
+}
+
+/* Loader */
 .loader-container {
   display: none;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   padding: 40px;
   margin: 20px 0;
 }
@@ -138,7 +128,7 @@ body {
   width: 48px;
   height: 48px;
   border: 4px solid #f3f3f3;
-  border-top: 4px solid var(--primary-color);
+  border-top: 4px solid #4e75ff;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 16px;
@@ -147,12 +137,9 @@ body {
 .loader-text {
   font-family: 'Montserrat', sans-serif;
   font-size: 16px;
-  font-weight: 400;
   line-height: 1.5;
   letter-spacing: 0.04em;
-  color: var(--text-color);
-  margin: 0;
-  text-align: center;
+  color: #2e2f42;
 }
 
 @keyframes spin {
@@ -164,64 +151,25 @@ body {
   }
 }
 
-/* Main content */
-main {
-  display: none;
-  flex: 1;
-  padding: 20px 0;
-}
-
-main.has-results {
-  display: block;
-}
-
-/* Loader */
-.loader-container {
-  display: none;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  margin: 20px 0;
-}
-
-.loader {
-  width: 48px;
-  height: 48px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid var(--primary-color);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* Галерея - ТОЧНО ПО МАКЕТУ 3x3 */
+/* Gallery */
 .gallery {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
   list-style: none;
   padding: 0;
   margin: 32px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
   justify-content: center;
+  min-height: 200px;
 }
 
 .gallery-item {
-  flex: 0 0 360px;
+  width: 360px;
   border: 1px solid #808080;
   border-radius: 4px;
   overflow: hidden;
-  transition:
-    transform var(--transition),
-    box-shadow var(--transition);
-  opacity: 1;
+  transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: #fff;
 }
 
 .gallery-item:hover {
@@ -247,7 +195,6 @@ main.has-results {
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
   padding: 4px 20px;
-  background-color: var(--white);
 }
 
 .info-item {
@@ -255,6 +202,7 @@ main.has-results {
   flex-direction: column;
   align-items: center;
   gap: 2px;
+  text-align: center;
 }
 
 .info-label {
@@ -262,7 +210,7 @@ main.has-results {
   font-weight: 600;
   line-height: 1.33;
   letter-spacing: 0.04em;
-  color: var(--text-color);
+  color: #2e2f42;
 }
 
 .info-value {
@@ -270,92 +218,80 @@ main.has-results {
   font-weight: 400;
   line-height: 2;
   letter-spacing: 0.04em;
-  color: var(--text-color);
+  color: #2e2f42;
 }
 
-/* Сообщение "нет результатов" */
+/* No results message */
 .no-results {
   text-align: center;
+  padding: 40px;
   font-size: 16px;
-  font-weight: 400;
   line-height: 1.5;
   letter-spacing: 0.04em;
-  color: var(--text-color);
-  padding: 40px;
-  margin: 20px 0;
+  color: #2e2f42;
   width: 100%;
 }
 
-/* Основное содержимое */
-.container {
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 0 32px;
+/* Load More button */
+.load-more-container {
+  display: none;
+  justify-content: center;
+  margin: 32px 0 64px;
 }
 
-/* Кастомные стили для iziToast чтобы соответствовать макету ошибки */
-.iziToast {
-  font-family: 'Montserrat', sans-serif !important;
-  border-radius: 4px !important;
+.load-more-btn {
+  padding: 8px 16px;
+  background-color: #4e75ff;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.iziToast.iziToast-color-red {
-  background: var(--error-bg) !important;
-  width: 432px !important;
-  min-height: 88px !important;
-  padding: 16px !important;
+.load-more-btn:hover {
+  background-color: #6c8cff;
 }
 
-.iziToast.iziToast-color-red .iziToast-body {
-  padding-left: 0 !important;
-  margin-left: 0 !important;
-}
-
-.iziToast.iziToast-color-red .iziToast-title,
-.iziToast.iziToast-color-red .iziToast-message {
-  color: var(--white) !important;
-  font-family: 'Montserrat', sans-serif !important;
-  font-size: 16px !important;
-  line-height: 1.5 !important;
-  letter-spacing: 0.04em !important;
-}
-
-.iziToast.iziToast-color-red .iziToast-title {
-  font-weight: 600 !important;
-  margin-bottom: 4px !important;
-}
-
-.iziToast.iziToast-color-red .iziToast-close {
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M2.66683 2.66669L13.3335 13.3334M2.66683 13.3334L13.3335 2.66669' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E")
-    no-repeat center !important;
-  background-size: 16px 16px !important;
-  width: 16px !important;
-  height: 16px !important;
-  opacity: 1 !important;
-  top: 16px !important;
-  right: 16px !important;
-}
-
-.iziToast.iziToast-color-red .iziToast-close:hover {
-  opacity: 0.8 !important;
-}
-
-.iziToast.iziToast-color-yellow {
-  background: #ffc107 !important;
-  border-radius: 4px !important;
+.load-more-btn:disabled {
+  background-color: #cfcfcf;
+  cursor: not-allowed;
 }
 
 /* Адаптивность */
-@media screen and (max-width: 1200px) {
+@media (max-width: 1200px) {
   .gallery-item {
-    flex: 0 0 calc(50% - 12px);
-    max-width: calc(50% - 12px);
+    width: calc(33.333% - 16px);
   }
 }
 
-@media screen and (max-width: 768px) {
-  .container {
-    padding: 0 16px;
+@media (max-width: 992px) {
+  .gallery-item {
+    width: calc(50% - 12px);
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    min-height: 180px;
+    padding: 16px 0;
+  }
+
+  .form {
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .form-input,
+  .form-btn {
+    width: 100%;
   }
 
   .gallery {
@@ -363,40 +299,8 @@ main.has-results {
   }
 
   .gallery-item {
-    flex: 0 0 100%;
-    max-width: 100%;
-  }
-
-  .form {
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .form-input {
     width: 100%;
     max-width: 400px;
-  }
-
-  .form-btn {
-    width: 100%;
-    max-width: 400px;
-  }
-
-  .iziToast {
-    max-width: 90% !important;
-    width: auto !important;
-  }
-
-  .iziToast.iziToast-color-red {
-    width: 90% !important;
-    max-width: 400px !important;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .header {
-    min-height: 80vh;
-    padding: 16px;
   }
 
   .image-info {

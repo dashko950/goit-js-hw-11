@@ -9,12 +9,14 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="./css/styles.css" />
+
     <title>Image Search App</title>
   </head>
   <body>
     <header class="header">
       <div class="container">
-        <form class="form">
+        <form class="form" id="search-form">
           <input
             class="form-input"
             type="text"
@@ -30,12 +32,19 @@
 
     <main>
       <div class="container">
+        <!-- Loader -->
         <div class="loader-container">
           <div class="loader"></div>
           <p class="loader-text">Loading images, please wait...</p>
         </div>
 
+        <!-- Gallery -->
         <ul class="gallery"></ul>
+
+        <!-- Load More Button -->
+        <div class="load-more-container">
+          <button class="load-more-btn" type="button">Load more</button>
+        </div>
       </div>
     </main>
 

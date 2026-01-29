@@ -1,259 +1,209 @@
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
-import './css/styles.css';
 import { getImagesByQuery } from './js/pixabay-api.js';
 import {
   createGallery,
   clearGallery,
   showLoader,
   hideLoader,
+  showLoadMoreButton,
+  hideLoadMoreButton,
+  appendGallery,
+  refreshLightbox,
 } from './js/render-functions.js';
-
-console.log('App loaded successfully!');
 
 // Элементы DOM
 const form = document.querySelector('.form');
-const mainElement = document.querySelector('main');
-const gallery = document.querySelector('.gallery');
-const loader = document.querySelector('.loader-container');
+const loadMoreBtn = document.querySelector('.load-more-btn');
 
 // Переменные состояния
 let currentPage = 1;
 let currentQuery = '';
 let isLoading = false;
 let totalHits = 0;
+let loadedHits = 0;
 
-// Изначально скрываем main
-mainElement.style.display = 'none';
+// Изначально скрываем кнопку Load more
+hideLoadMoreButton();
 
 // Обработчик формы
-form.addEventListener('submit', async e => {
+form.addEventListener('submit', handleFormSubmit);
+
+// Обработчик кнопки Load more
+loadMoreBtn.addEventListener('click', handleLoadMore);
+
+async function handleFormSubmit(e) {
   e.preventDefault();
 
-  if (isLoading) {
-    console.log('Already loading, please wait...');
-    return;
-  }
+  // Получаем поисковый запрос
+  const searchInput = form.elements['search-text'];
+  const searchQuery = searchInput.value.trim();
 
-  const searchQuery = form.elements['search-text'].value.trim();
-
+  // Проверка на пустой запрос
   if (!searchQuery) {
-    showWarningToast('Please enter a search term');
+    showWarning('Please enter a search term');
     return;
   }
 
-  // Сброс состояния
+  // Если уже идет загрузка - выходим
+  if (isLoading) return;
+
+  // Сбрасываем состояние
   currentQuery = searchQuery;
   currentPage = 1;
   isLoading = true;
 
-  // Показываем лоадер
+  // Показываем лоадер, скрываем кнопку Load more
   showLoader();
+  hideLoadMoreButton();
 
   // Очищаем галерею
   clearGallery();
 
   try {
-    console.log(`Starting search for: "${searchQuery}"`);
-
     // Делаем запрос к API
     const data = await getImagesByQuery(searchQuery, currentPage);
-    console.log('Data received, total hits:', data.totalHits);
 
     // Скрываем лоадер
     hideLoader();
     isLoading = false;
 
-    // Показываем main
-    mainElement.style.display = 'block';
-    mainElement.classList.add('has-results');
-
-    // Проверяем результаты
-    if (!data || !data.hits || data.hits.length === 0) {
-      console.log('No images found for query:', searchQuery);
-      showErrorToast(
-        'Sorry, there are no images matching your search query. Please try again!'
-      );
-
-      // Показываем сообщение в галерее
-      gallery.innerHTML =
-        '<p class="no-results">No images found. Try another search term.</p>';
+    // Проверяем наличие результатов
+    if (!data.hits || data.hits.length === 0) {
+      showNoResultsMessage();
       return;
     }
 
     // Сохраняем общее количество найденных изображений
-    totalHits = data.totalHits || data.hits.length;
-    console.log(
-      `Found ${totalHits} total hits, showing ${data.hits.length} images`
-    );
+    totalHits = data.totalHits;
+    loadedHits = data.hits.length;
 
     // Показываем галерею
-    createGallery(data);
+    createGallery(data.hits);
 
-    // Прокручиваем к результатам
-    setTimeout(() => {
-      mainElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    }, 100);
+    // Проверяем, нужно ли показывать кнопку Load more
+    if (loadedHits < totalHits) {
+      showLoadMoreButton();
+    }
   } catch (error) {
-    console.error('Search error:', error);
+    // Скрываем лоадер в случае ошибки
     hideLoader();
     isLoading = false;
 
-    // Проверяем тип ошибки для правильного сообщения
-    if (error.message.includes('Rate limit')) {
-      showErrorToast(
-        'Rate limit exceeded. Please wait a minute before searching again.'
-      );
-    } else if (error.message.includes('Network')) {
-      showErrorToast('Network error. Please check your internet connection.');
-    } else {
-      showErrorToast(
-        'An error occurred while fetching images. Please try again later.'
-      );
-    }
-
     // Показываем сообщение об ошибке
-    gallery.innerHTML = `<p class="no-results">Error loading images. Please try again.</p>`;
+    showError('An error occurred while fetching images. Please try again.');
+    console.error('Search error:', error);
   }
-});
+}
 
-// Обработчик бесконечной прокрутки
-window.addEventListener('scroll', () => {
-  if (isLoading || !currentQuery) return;
-
-  const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-
-  // Если пользователь прокрутил до конца страницы
-  if (scrollTop + clientHeight >= scrollHeight - 500) {
-    loadMoreImages();
-  }
-});
-
-// Функция для загрузки дополнительных изображений
-async function loadMoreImages() {
-  if (isLoading) return;
-
-  // Проверяем, есть ли еще изображения для загрузки
-  const loadedImages = currentPage * 40;
-  if (loadedImages >= totalHits) {
-    console.log('All images loaded');
-    return;
-  }
+async function handleLoadMore() {
+  // Если уже идет загрузка или нет больше изображений - выходим
+  if (isLoading || loadedHits >= totalHits) return;
 
   isLoading = true;
   showLoader();
 
   try {
     currentPage++;
-    console.log(`Loading more images, page ${currentPage}`);
 
+    // Делаем запрос к API
     const data = await getImagesByQuery(currentQuery, currentPage);
 
-    if (data.hits && data.hits.length > 0) {
-      // Добавляем новые изображения
-      const newMarkup = data.hits
-        .map(
-          image => `
-        <li class="gallery-item">
-          <a class="gallery-link" href="${image.largeImageURL}">
-            <div class="gallery-card">
-              <img 
-                class="gallery-image" 
-                src="${image.webformatURL}" 
-                alt="${image.tags}" 
-                loading="lazy" 
-              />
-              <div class="image-info">
-                <div class="info-item">
-                  <span class="info-label">Likes</span>
-                  <span class="info-value">${image.likes}</span>
-                </div>
-                <div class="info-item">
-                  <span class="info-label">Views</span>
-                  <span class="info-value">${image.views}</span>
-                </div>
-                <div class="info-item">
-                  <span class="info-label">Comments</span>
-                  <span class="info-value">${image.comments}</span>
-                </div>
-                <div class="info-item">
-                  <span class="info-label">Downloads</span>
-                  <span class="info-value">${image.downloads}</span>
-                </div>
-              </div>
-            </div>
-          </a>
-        </li>
-      `
-        )
-        .join('');
+    // Если нет новых изображений
+    if (!data.hits || data.hits.length === 0) {
+      hideLoadMoreButton();
+      showInfo('No more images to load.');
+      return;
+    }
 
-      gallery.insertAdjacentHTML('beforeend', newMarkup);
+    // Добавляем новые изображения в галерею
+    appendGallery(data.hits);
+    loadedHits += data.hits.length;
 
-      // Обновляем лайтбокс
-      if (window.lightbox) {
-        window.lightbox.refresh();
-      }
+    // Обновляем SimpleLightbox
+    refreshLightbox();
 
-      // Плавная прокрутка к новым изображениям
-      const galleryItems = document.querySelectorAll('.gallery-item');
-      if (galleryItems.length > 0) {
-        const lastItem = galleryItems[galleryItems.length - 1];
-        lastItem.scrollIntoView({
-          behavior: 'smooth',
-          block: 'end',
-        });
-      }
+    // Прокручиваем страницу к новым изображениям
+    scrollToNewImages();
+
+    // Проверяем, нужно ли еще показывать кнопку Load more
+    if (loadedHits >= totalHits) {
+      hideLoadMoreButton();
+      showInfo("We're sorry, but you've reached the end of search results.");
     }
   } catch (error) {
-    console.error('Load more error:', error);
-    showErrorToast('Failed to load more images.');
+    // В случае ошибки возвращаемся на предыдущую страницу
     currentPage--;
+
+    // Показываем сообщение об ошибке
+    showError('Failed to load more images. Please try again.');
+    console.error('Load more error:', error);
   } finally {
+    // Всегда скрываем лоадер
     hideLoader();
     isLoading = false;
   }
 }
 
+// Функция для прокрутки к новым изображениям
+function scrollToNewImages() {
+  const galleryItems = document.querySelectorAll('.gallery-item');
+  if (galleryItems.length > 0) {
+    const secondLastItem = galleryItems[galleryItems.length - 2];
+    if (secondLastItem) {
+      secondLastItem.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    }
+  }
+}
+
+// Функция для показа сообщения "нет результатов"
+function showNoResultsMessage() {
+  const gallery = document.querySelector('.gallery');
+  if (gallery) {
+    gallery.innerHTML = `
+      <p class="no-results">
+        Sorry, there are no images matching your search query. Please try again!
+      </p>
+    `;
+  }
+}
+
 // Функции для уведомлений
-function showErrorToast(message) {
+function showError(message) {
   iziToast.error({
-    title: '',
+    title: 'Error',
     message: message,
     position: 'topRight',
     timeout: 5000,
     backgroundColor: '#EF4040',
     theme: 'dark',
     progressBarColor: '#D32F2F',
-    iconColor: '#FFFFFF',
-    titleColor: '#FFFFFF',
-    messageColor: '#FFFFFF',
-    close: true,
-    closeOnEscape: true,
-    closeOnClick: true,
-    displayMode: 'replace',
   });
 }
 
-function showWarningToast(message) {
+function showWarning(message) {
   iziToast.warning({
-    title: '',
+    title: 'Warning',
     message: message,
     position: 'topRight',
     timeout: 3000,
     backgroundColor: '#FFC107',
     theme: 'dark',
     progressBarColor: '#FFA000',
-    iconColor: '#FFFFFF',
-    titleColor: '#FFFFFF',
-    messageColor: '#FFFFFF',
-    close: false,
-    closeOnEscape: true,
-    closeOnClick: false,
+  });
+}
+
+function showInfo(message) {
+  iziToast.info({
+    title: 'Info',
+    message: message,
+    position: 'topRight',
+    timeout: 3000,
+    backgroundColor: '#4e75ff',
+    theme: 'dark',
+    progressBarColor: '#6c8cff',
   });
 }
